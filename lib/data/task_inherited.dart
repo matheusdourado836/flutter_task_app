@@ -11,7 +11,7 @@ class TaskInherited extends InheritedWidget {
     CreateTask('Tocar guitarra', 'assets/images/guitar.png', 1),
     CreateTask('Aprender Flutter', 'assets/images/dash.png', 2),
     CreateTask('Tocar Teclado', 'assets/images/piano.jpg', 1),
-    CreateTask('Meditar', 'assets/images/meditar.jpeg', 3),
+    CreateTask('Meditar', 'assets/images/meditar.jpeg', 2),
     CreateTask('Jogar', 'assets/images/jogar.jpg', 1,),
   ];
 

@@ -11,9 +11,15 @@ class InitialScreen extends StatefulWidget {
 
 double levelTotal = 0;
 
+double formatLevel(double level) {
+  level = level * 100;
+  var formatedLevel = level.toStringAsFixed(2);
+  print('formated $formatedLevel');
+  
+  return double.parse(formatedLevel);
+}
 double sumLevel(List list) {
   double sum = 0;
-  String sumFormated = '';
   double qtdNiveis = 0;
   list.forEach((element) {
     switch (element.currentLevel) {
@@ -51,11 +57,8 @@ double sumLevel(List list) {
     }
     qtdNiveis += element.dificuldade * 50;
   });
-  print('O total de niveis é de $qtdNiveis');
-  print('soma: $sum');
-  sumFormated = sum.toStringAsFixed(3);
 
-  return sum.toDouble() / qtdNiveis;
+  return sum / qtdNiveis;
 }
 
 class _InitialScreenState extends State<InitialScreen> {
@@ -74,7 +77,7 @@ class _InitialScreenState extends State<InitialScreen> {
               children: [
                 Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text('Progresso: ${levelTotal * 100}%'),
+                  child: Text('Progresso: ${formatLevel(levelTotal)}%'),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
