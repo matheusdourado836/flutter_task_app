@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_task_app/components/difficulty.dart';
+import 'package:flutter_task_app/data/task_dao.dart';
 
 class CreateTask extends StatefulWidget {
   final String taskName;
   final String foto;
   final int dificuldade;
+  final int? level;
+  final int mastery;
 
-  CreateTask(this.taskName, this.foto, this.dificuldade, {Key? key})
+  CreateTask(this.taskName, this.foto, this.dificuldade, this.level, this.mastery, {Key? key})
       : super(key: key);
 
   int nivel = 0;
-  int contador = 0;
   int currentLevel = 1;
   bool maxLevel = false;
-  bool nextLevel = false;
   bool infoChanged = false;
   Color? cor = Colors.blue;
   @override
@@ -21,7 +22,6 @@ class CreateTask extends StatefulWidget {
 }
 
 class _CreateTaskState extends State<CreateTask> {
-
   bool isAsset() {
     if(widget.foto.contains('http')) {
       return false;
@@ -39,7 +39,7 @@ class _CreateTaskState extends State<CreateTask> {
             height: 140,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              color: widget.nextLevel ? widget.cor : Colors.blue,
+              color: widget.cor,
             ),
           ),
           Column(
@@ -97,49 +97,50 @@ class _CreateTaskState extends State<CreateTask> {
                       height: 60,
                       width: 50,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           setState(() {
                             widget.infoChanged = true;
                             widget.nivel++;
+                            switch (widget.currentLevel) {
+                              case 1:
+                                {
+                                  widget.cor = Colors.blue;
+                                }
+                                break;
+                              case 2:
+                                {
+                                  widget.cor = Colors.yellow[600];
+                                }
+                                break;
+                              case 3:
+                                {
+                                  widget.cor = Colors.orange;
+                                }
+                                break;
+                              case 4:
+                                {
+                                  widget.cor = Colors.green;
+                                }
+                                break;
+                              case 5:
+                                {
+                                  widget.cor = Colors.red;
+                                }
+                                break;
+                              case 6:
+                                {
+                                  widget.cor = Colors.black;
+                                  widget.maxLevel = true;
+                                  widget.nivel = 0;
+                                }
+                                break;
+                            }
                             if (widget.nivel / widget.dificuldade > 10) {
-                              widget.nextLevel = true;
                               widget.nivel = 0;
-                              widget.contador++;
-                              switch (widget.contador) {
-                                case 1:
-                                  {
-                                    widget.cor = Colors.yellow[600];
-                                    widget.currentLevel = 2;
-                                  }
-                                  break;
-                                case 2:
-                                  {
-                                    widget.cor = Colors.orange;
-                                    widget.currentLevel = 3;
-                                  }
-                                  break;
-                                case 3:
-                                  {
-                                    widget.cor = Colors.green;
-                                    widget.currentLevel = 4;
-                                  }
-                                  break;
-                                case 4:
-                                  {
-                                    widget.cor = Colors.red;
-                                    widget.currentLevel = 5;
-                                  }
-                                  break;
-                                case 5:
-                                  {
-                                    widget.cor = Colors.black;
-                                    widget.currentLevel = 6;
-                                    widget.maxLevel = true;
-                                  }
-                                  break;
-                              }
+                              widget.currentLevel++;
                             }
                           });
+                          await TaskDao().updateLevel(widget.nivel, widget.currentLevel, widget.taskName);
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -168,7 +169,7 @@ class _CreateTaskState extends State<CreateTask> {
                         color: Colors.white,
                         value: (widget.nivel > 0 && widget.maxLevel == false)
                             ? (widget.nivel / widget.dificuldade) / 10
-                            : 1,
+                            : 0,
                       ),
                     ),
                   ),
@@ -184,10 +185,10 @@ class _CreateTaskState extends State<CreateTask> {
                             ),
                           )
                         : Text(
-                            'Nível: ${widget.nivel}',
-                            style: const TextStyle(
-                                fontSize: 18, color: Colors.white),
-                          ),
+                      'Nível: ${widget.nivel}',
+                      style: const TextStyle(
+                          fontSize: 18, color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -198,3 +199,4 @@ class _CreateTaskState extends State<CreateTask> {
     );
   }
 }
+
